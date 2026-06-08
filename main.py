@@ -38,11 +38,11 @@ USERS = {
 
 # MySQL Connection
 def get_db():
-     db = mysql.connector.connect(
-        host="sql12.freesqldatabase.com",
-        user="sql12829740",
-        password="m2y5mYjw4R",
-        database="sql12829740"
+    db = mysql.connector.connect(
+    host="sql12.freesqldatabase.com",
+    user="sql12829740",
+    password="m2y5mYjw4R",
+    database="sql12829740"
     )
     return db
 
