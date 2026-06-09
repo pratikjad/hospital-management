@@ -2,7 +2,6 @@ from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
-from passlib.context import CryptContext
 import mysql.connector
 
 app = FastAPI()
@@ -18,12 +17,18 @@ app.add_middleware(
 SECRET_KEY = "hospital_secret_key_2024"
 ALGORITHM = "HS256"
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 USERS = {
-    "admin": {"password": pwd_context.hash("admin123"), "role": "admin"},
-    "user": {"password": pwd_context.hash("user123"), "role": "user"}
+    "admin": {
+        "password": "admin123",
+        "role": "admin"
+    },
+    "user": {
+        "password": "user123",
+        "role": "user"
+    }
 }
 
 def get_db():
@@ -56,7 +61,7 @@ def login(data: dict):
     if username not in USERS:
         raise HTTPException(status_code=401, detail="Wrong username or password!")
     user = USERS[username]
-    if not pwd_context.verify(password, user["password"]):
+    if password != user["password"]:
         raise HTTPException(status_code=401, detail="Wrong username or password!")
     token = create_token({"username": username, "role": user["role"]})
     return {"token": token, "role": user["role"]}
